@@ -1,0 +1,21 @@
+Use Case
+
+Kubernetes Pod Disruption Budget Practical Guide
+
+Have you ever faced a situation where your application suddenly went down during a cluster upgrade or scaling event? Frustrating, right?
+
+Losing pods at the wrong moment can mean downtime, unhappy users, and stress all around. Well, here’s where Pod Disruption Budgets (PDB) step in to save the day.
+
+What Exactly is a Pod Disruption Budget (PDB)?
+
+A PDB makes sure that during voluntary disruptions (like a node drain) or involuntary events (like a node crash), a certain number of pods remain running. Without it, Kubernetes could easily kill off too many pods at once, leaving your service unavailable.
+
+What Happens Without a PDB?
+
+Imagine this: you’ve got 3 nodes, and your app is running 2 pods—App 1 on Node 1 and App 2 on Node 2. When Node 1 gets drained, App 1 is terminated, but App 3 is still pending and hasn’t started on Node 3 yet.
+
+Now, if Node 2 gets drained while App 3 is still pending, App 2 is terminated as well. What are you left with? No healthy pods. Your service is down until the new pod is up.
+
+What Happens With a PDB?
+
+If you configure a PDB requiring that at least 1 pod must be running, this changes everything. When Node 1 is drained and App 1 terminates, App 3 starts getting ready. But if the system tries to drain Node 2 before App 3 is running, Kubernetes will block the drain to keep App 2 alive. This way, you’ll never be left without healthy pods, ensuring continuous service.
