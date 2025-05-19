@@ -19,3 +19,23 @@ Now, if Node 2 gets drained while App 3 is still pending, App 2 is terminated as
 What Happens With a PDB?
 
 If you configure a PDB requiring that at least 1 pod must be running, this changes everything. When Node 1 is drained and App 1 terminates, App 3 starts getting ready. But if the system tries to drain Node 2 before App 3 is running, Kubernetes will block the drain to keep App 2 alive. This way, you’ll never be left without healthy pods, ensuring continuous service.
+Why  Static POD needed 
+
+###############################################################################
+Static Pods are Pods that are created and managed directly by the kubelet daemon running on a specific node, rather than by the Kubernetes API server.
+1. Running legacy applications: If you have legacy applications that cannot be easily containerized, you can use static Pods to run them on Kubernetes nodes.
+2. Running essential system components: Static Pods can be used to run essential system components that need to be available at all times, even if the Kubernetes API server is unavailable. This can include network components, logging agents, and monitoring tools.
+
+###########################################################################
+Liveness and Readiness
+Both liveness & readiness probes are used to control the health of an application.
+
+- Failing liveness probe will restart the container 
+- whereas failing readiness probe will stop our application from serving traffic.
+
+side car run along with main container
+
+####################################################################################
+Quality of Service classes
+Kubernetes classifies the Pods that you run and allocates each Pod into a specific quality of service (QoS) class. Kubernetes uses that classification to influence how different pods are handled. Kubernetes does this classification based on the resource requests of the Containers in that Pod, along with how those requests relate to resource limits. This is known as Quality of Service (QoS) class.
+
