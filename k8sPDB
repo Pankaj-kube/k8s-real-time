@@ -38,4 +38,31 @@ side car run along with main container
 ####################################################################################
 Quality of Service classes
 Kubernetes classifies the Pods that you run and allocates each Pod into a specific quality of service (QoS) class. Kubernetes uses that classification to influence how different pods are handled. Kubernetes does this classification based on the resource requests of the Containers in that Pod, along with how those requests relate to resource limits. This is known as Quality of Service (QoS) class.
+Guaranteed -Every container in the pod has memory and CPU requests equal to their limits.
+Burstable - It has memory or CPU requests set, but limits are higher or not all containers have equal requests and limits.
+BestEffort - No memory or CPU requests or limits are set for any container.
+##################################################################################
+Node Goes NotReady Due to Clock Skew
+We are running tanzu cluster where workernodes created automatically.
+We have checked NTP or chrony is not running /install on any node
+but for few worker node on the pods we are  seeing clock Skew error
+later we found vmware tool is not running on those vms after restart vmware tool on vms issue got resolved 
+##################################################################################
 
+ClusterIP Service
+• Default Service Type: When you create a service without specifying a type, it defaults to ClusterIP.
+• Single IP Address: It assigns a single IP address (ClusterIP) to a group of pods, which acts as a load balancer for distributing traffic among the pods.
+• Internal Access: This IP address is only accessible within the Kubernetes cluster, making it suitable for internal communication between services1.
+Headless Service
+• No ClusterIP: Unlike ClusterIP services, headless services do not allocate a ClusterIP. Instead, they return the IP addresses of the individual pods directly.
+• Direct Pod Access: This allows clients to connect directly to the pods without going through a load balancer. It is useful for stateful applications where you need to connect to specific pod instances.
+• DNS Records: When a DNS query is made for a headless service, it returns the IP addresses of all the pods associated with the service, enabling direct communication with each pod2
+
+NodePort
+Exposes the Service on each Node's IP at a static port (the NodePort). To make the node port available, Kubernetes sets up a cluster IP address, the same as if you had requested a Service of type: ClusterIP. 
+LoadBalancer
+Exposes the Service externally using an external load balancer. Kubernetes does not directly offer a load balancing component; you must provide one, or you can integrate your Kubernetes cluster with a cloud provider.
+ExternalName
+Maps the Service to the contents of the externalName field (for example, to the hostname api.foo.bar.example). The mapping configures your cluster's DNS server to return a CNAME record with that external hostname value. No proxying of any kind is set up.
+The type field in the Service API is designed as nested functionality - each l
+######################################################################################
