@@ -1,0 +1,30 @@
+etcd health check
+
+root@control-plane-wkwxk [ ~ ]# crictl ps |  grep etcd
+d8ff130361800       42d9d7192eba2       10 months ago       Running             etcd                               0                   872dfbb8489bc       etcd-mdc01-cluster-ccs-1-control-plane-wkwxk
+root@control-plane-wkwxk [ ~ ]# crictl  exec -it d8ff130361800 /bin/sh
+# alias etcdctl='etcdctl --endpoints=localhost:2379,10.4.27.167:2379,10.4.26.191:2379 --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --cacert=/etc/kubernetes/pki/etcd/ca.crt'
+#  etcdctl endpoint status --write-out=table
++------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|     ENDPOINT     |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
++------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+|   localhost:2379 | 3aa4a9667d1d373f |   3.5.4 |  359 MB |      true |      false |         3 |  628773961 |          628773961 |        |
+| 10.4.27.167:2379 | 5abed5afc28df12b |   3.5.4 |  374 MB |     false |      false |         3 |  628773961 |          628773961 |        |
+| 10.4.26.191:2379 |   f22788c808007e |   3.5.4 |  342 MB |     false |      false |         3 |  628773961 |          628773961 |        |
++------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+# etcdctl alarm list
+#  etcdctl endpoint health -w table
++------------------+--------+------------+-------+
+|     ENDPOINT     | HEALTH |    TOOK    | ERROR |
++------------------+--------+------------+-------+
+| 10.4.26.191:2379 |   true | 8.854914ms |       |
+|   localhost:2379 |   true | 9.622885ms |       |
+| 10.4.27.167:2379 |   true | 8.433239ms |       |
++------------------+--------+------------+-------+
+# etcdctl check perf
+ 60 / 60 Boooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo! 100.00% 1m0s
+PASS: Throughput is 150 writes/s
+PASS: Slowest request took 0.049519s
+PASS: Stddev is 0.003023s
+PASS
+#
