@@ -66,3 +66,11 @@ ExternalName
 Maps the Service to the contents of the externalName field (for example, to the hostname api.foo.bar.example). The mapping configures your cluster's DNS server to return a CNAME record with that external hostname value. No proxying of any kind is set up.
 The type field in the Service API is designed as nested functionality - each l
 ######################################################################################
+
+Finalizers are namespaced keys that tell Kubernetes to wait until specific conditions are met before it fully deletes resources marked for deletion. Finalizers alert controllers to clean up resources the deleted object owned.
+Kubernetes keeps monitoring the Finalizers attached to the object. - The object will be deleted once the metadata.finalizers field is empty, because all Finalizers were removed by the completion of their actions.
+kubectl patch pod example-pod -p '{"metadata: {"finalizers": null}}'
+Stale Finalizers Preventing Namespace Deletion
+kubectl patch ns <name> -p '{"spec":{"finalizers":[]}}' --type=merge
+=======================================================================================
+
