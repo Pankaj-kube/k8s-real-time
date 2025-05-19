@@ -1,0 +1,32 @@
+kubectl set env deployment.apps/powerprotect-controller --containers="k8s-controller" PPDM_SNAPSHOT_DELETE_TIMEOUT_SECONDS=1200 -n powerprotect
+PVC attached to POD
+
+kubectl get pods --all-namespaces -o=json | jq -c '.items[] | {name: .metadata.name, namespace: .metadata.namespace, claimName: .spec |  select( has ("volumes") ).volumes[] | select( has ("persistentVolumeClaim") ).persistentVolumeClaim.claimName }'
+Request CPU:
+ 
+k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\t"}{.spec.containers[].resources.requests.cpu}{"\n"}{end}' --all-namespaces | sort -nk 3
+ 
+Request Memory:
+ 
+k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\t"}{.spec.containers[].resources.requests.memory}{"\n"}{end}' --all-namespaces | sort -nk 3
+ 
+Limit CPU:
+ 
+k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\t"}{.spec.containers[].resources.limits.cpu}{"\n"}{end}' --all-namespaces | sort -nk 3
+ 
+Limits memory:
+ 
+k get pods -o=jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.namespace}{"\t"}{.spec.containers[].resources.limits.memory}{"\n"}{end}' --all-namespaces | sort -nk 3
+
+To check Allocated  resources -
+for i in `kubectl get nodes --no-headers| awk '{print $1}'`; do echo "================================= $i ===================================="; kubectl describe nodes $i |grep -A 5 'Allocated resources' ; done
+
+
+ k get validatingwebhookconfigurations.admissionregistration.k8s.io
+ k get mutatingwebhookconfigurations.admissionregistration.k8s.io
+k delete validatingwebhookconfigurations.admissionregistration.k8s.io system-admission
+k get validatingwebhookconfigurations.admissionregistration.k8s.io system-admission -o yaml > system-admission.yaml
+
+kubectl get --raw='/readyz?verbose'
+
+  
